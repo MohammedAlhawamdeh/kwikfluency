@@ -22,10 +22,9 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
         isOpen ? "visible" : "invisible"
       }`}
       style={{
-        top: "72px", // Height of navbar
+        top: "72px",
       }}
     >
-      {/* Dark Overlay */}
       <div
         className={`absolute inset-0 bg-black transition-opacity duration-300 ${
           isOpen ? "opacity-50" : "opacity-0"
@@ -33,10 +32,9 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
         onClick={closeMenu}
       />
 
-      {/* Menu Content */}
       <div
         className={`mobile-menu absolute left-0 right-0 transition-all duration-300 transform ${
-          isDark ? "bg-gray-900" : "bg-white"
+          isDark ? "bg-black" : "bg-white"
         } shadow-lg ${
           isOpen ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
         }`}
