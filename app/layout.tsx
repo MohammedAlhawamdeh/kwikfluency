@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Open_Sans } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
-import NavbarDark from "./components/NavbarDark";
+import { ThemeProvider } from "./components/ThemeProvider";
 
 const openSans = Open_Sans({
   variable: "--font-open-sans",
@@ -21,12 +21,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={openSans.className}>
-        <NavbarDark />
-        <Navbar />
-
-        <main>{children}</main>
+        <ThemeProvider>
+          <Navbar />
+          <main>{children}</main>
+        </ThemeProvider>
       </body>
     </html>
   );
