@@ -2,22 +2,22 @@ import { createClient } from "@/app/lib/supabase/server";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
-  const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/";
+  const url = new URL(request.url);
+  const code = url.searchParams.get("code");
+  const next = url.searchParams.get("next") || "/";
+  const origin = url.origin;
 
-  if (code) {
-    const supabase = await createClient();
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-
-    if (!error) {
-      // The AuthContext will detect the auth state change and update the UI
-      return NextResponse.redirect(`${origin}${next}`);
-    }
+  if (!code) {
+    return NextResponse.redirect(`${origin}/auth?error=missing_code`);
   }
 
-  // Return the user to an error page with instructions
-  return NextResponse.redirect(
-    `${origin}/auth?error=Could not authenticate user`
-  );
+  const supabase = await createClient();
+  const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+  if (error) {
+    console.error("Auth error:", error.message);
+    return NextResponse.redirect(`${origin}/auth?error=auth_failed`);
+  }
+
+  return NextResponse.redirect(`${origin}${next}`);
 }

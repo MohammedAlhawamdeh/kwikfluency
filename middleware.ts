@@ -31,17 +31,14 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  // Refresh session if expired - required for Server Components
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Protected routes
   if (request.nextUrl.pathname.startsWith("/dashboard") && !user) {
     return NextResponse.redirect(new URL("/auth", request.url));
   }
 
-  // Redirect authenticated users away from auth page
   if (request.nextUrl.pathname === "/auth" && user) {
     return NextResponse.redirect(new URL("/", request.url));
   }
