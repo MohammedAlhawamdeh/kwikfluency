@@ -5,6 +5,7 @@ import { useTransition } from "react";
 import { signOut } from "@/app/lib/actions/auth";
 import { User } from "@supabase/supabase-js";
 import { useAuth } from "@/app/lib/context/AuthContext";
+import Spinner from "@/app/components/icons/Spinner";
 
 interface AuthButtonClientProps {
   user: User | null;
@@ -28,8 +29,8 @@ export default function AuthButtonClient({
   // Show loading state while checking auth
   if (loading) {
     return (
-      <div className="px-4 py-2 text-sm font-medium text-gray-400">
-        Loading...
+      <div className="px-4 py-2 text-sm font-medium text-gray-400 flex items-center justify-center">
+        <Spinner />
       </div>
     );
   }

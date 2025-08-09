@@ -1,22 +1,30 @@
+"use client";
+
 import AuthForm from "@/app/components/auth/AuthForm";
-import { redirect } from "next/navigation";
-import { getUser } from "@/app/lib/actions/auth";
+import { useTheme } from "@/app/components/ThemeProvider";
+import React, { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
-export default async function AuthPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ error?: string }>;
-}) {
-  // Check if user is already authenticated
-  const user = await getUser();
-  if (user) {
-    redirect("/");
-  }
+export default function AuthPage() {
+  const { theme } = useTheme();
+  const bgClass = theme === "dark" ? "bg-black" : "bg-white";
 
-  const params = await searchParams;
+  const searchParams = useSearchParams();
+  const [error, setError] = useState<string | undefined>(undefined);
+  
+  useEffect(() => {
+    // Optionally, check for user authentication here via API call
+    // If authenticated, redirect
+    // Example: fetch("/api/auth/me").then(...)
+
+    const errorParam = searchParams.get("error");
+    setError(errorParam || undefined);
+  }, [searchParams]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+    <div
+      className={`min-h-screen flex items-center justify-center ${bgClass} py-12 px-4 sm:px-6 lg:px-8`}
+    >
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white">
@@ -27,9 +35,9 @@ export default async function AuthPage({
           </p>
         </div>
 
-        {params?.error && (
+        {error && (
           <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-md text-sm">
-            {params.error}
+            {error}
           </div>
         )}
 
