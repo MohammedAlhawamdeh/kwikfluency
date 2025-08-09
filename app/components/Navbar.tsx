@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ReactNode } from "react";
 import { useTheme } from "./ThemeProvider";
 import lightLogo from "../../public/Light.svg";
 import darkLogo from "../../public/Dark.svg";
@@ -11,7 +11,11 @@ import Moon from "./icons/Moon";
 import Hamburger from "./icons/Hamburger";
 import MobileMenu from "./MobileMenu";
 
-const Navbar = () => {
+interface NavbarProps {
+  authButton?: ReactNode;
+}
+
+const Navbar = ({ authButton }: NavbarProps) => {
   const { theme, toggleTheme } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -90,10 +94,7 @@ const Navbar = () => {
           >
             {isDark ? <Sun /> : <Moon />}
           </button>
-
-          <button className="bg-[var(--vivid-orange)] text-white py-2 px-4 font-bold rounded-full hover:bg-amber-700 transition-colors">
-            Get Started
-          </button>
+          {authButton}
         </div>
 
         <div className="flex md:hidden items-center gap-2">
