@@ -69,7 +69,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
           </li>
           <li className="pt-4">
             <Link
-              href="/auth"
+              href="/"
               className="w-full bg-[var(--vivid-orange)] text-white py-3 px-6 font-bold rounded-full hover:bg-amber-700 transition-colors flex justify-center items-center"
               onClick={closeMenu}
             >

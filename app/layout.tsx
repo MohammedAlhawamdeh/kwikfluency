@@ -4,8 +4,6 @@ import "./globals.css";
 import NavbarWrapper from "./components/NavbarWrapper";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { Toaster } from "sonner";
-import { AuthProvider } from "./lib/context/AuthContext";
-import { getUser } from "./lib/actions/auth";
 import { getThemeFromCookies } from "./lib/theme-server";
 
 const openSans = Open_Sans({
@@ -24,19 +22,16 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await getUser();
   const theme = await getThemeFromCookies();
-  
+
   return (
     <html lang="en" className={theme} suppressHydrationWarning>
       <body className={openSans.className}>
-        <AuthProvider initialUser={user}>
-          <ThemeProvider initialTheme={theme}>
-            <NavbarWrapper />
-            <main>{children}</main>
-            <Toaster position="top-right" richColors />
-          </ThemeProvider>
-        </AuthProvider>
+        <ThemeProvider initialTheme={theme}>
+          <NavbarWrapper />
+          <main>{children}</main>
+          <Toaster position="top-right" richColors />
+        </ThemeProvider>
       </body>
     </html>
   );
