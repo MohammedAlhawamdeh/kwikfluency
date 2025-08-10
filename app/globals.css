@@ -57,7 +57,8 @@ body {
 .auth-card {
   background: var(--auth-card-bg);
   border: 1px solid var(--auth-border);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .auth-input {
@@ -143,7 +144,7 @@ body {
 }
 
 .auth-divider::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 0;
@@ -171,4 +172,60 @@ body {
   to {
     transform: rotate(360deg);
   }
+}
+
+/* Custom utility classes for theme-aware styling */
+.bg-surface {
+  background-color: rgba(23, 23, 23, 0.03);
+}
+
+.dark .bg-surface {
+  background-color: rgba(245, 245, 245, 0.03);
+}
+
+.border-theme {
+  border-color: var(--auth-border);
+}
+
+.text-muted {
+  color: var(--auth-muted);
+}
+
+.btn-primary {
+  background-color: var(--vivid-orange);
+  color: white;
+  transition: all 200ms;
+}
+
+.btn-primary:hover {
+  background-color: rgba(255, 92, 0, 0.9);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--foreground);
+  border: 1px solid var(--auth-border);
+  transition: all 200ms;
+}
+
+.btn-secondary:hover {
+  background-color: rgba(23, 23, 23, 0.05);
+  border-color: var(--auth-input-border);
+}
+
+.dark .btn-secondary:hover {
+  background-color: rgba(245, 245, 245, 0.05);
+}
+
+.card-theme {
+  background-color: var(--background);
+  border: 1px solid var(--auth-border);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.dark .card-theme {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3),
+    0 2px 4px -1px rgba(0, 0, 0, 0.2);
 }
