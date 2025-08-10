@@ -40,6 +40,9 @@ export default function LoginPage() {
       if (result.success) {
         toast.success(result.message)
         
+        // Trigger auth state change event
+        window.dispatchEvent(new CustomEvent('auth-change'))
+        
         // Redirect to return URL or dashboard
         const redirectTo = returnUrl && returnUrl.startsWith('/') ? returnUrl : '/dashboard'
         router.push(redirectTo)

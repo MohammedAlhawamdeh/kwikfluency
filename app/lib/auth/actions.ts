@@ -90,6 +90,11 @@ export async function signIn(formData: FormData): Promise<ActionResult> {
       name: data.user.user_metadata?.name,
     })
 
+    // Trigger auth state change event for UI updates
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('auth-change'))
+    }
+
     return {
       success: true,
       message: 'Signed in successfully',
@@ -341,6 +346,7 @@ export async function resetPassword(
     return {
       success: true,
       message: 'Password updated successfully',
+      data: { shouldTriggerAuthChange: true },
     }
   } catch (error) {
     console.error('Reset password error:', error)

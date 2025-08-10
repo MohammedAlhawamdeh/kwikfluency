@@ -29,7 +29,7 @@ const Navbar = () => {
 
   const isDark = theme === "dark";
 
-  // Load user data on component mount
+  // Load user data on component mount and listen for auth changes
   useEffect(() => {
     async function loadUser() {
       try {
@@ -44,15 +44,44 @@ const Navbar = () => {
     }
 
     loadUser();
+
+    // Listen for storage events to refresh user state when auth changes
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'auth-session' || e.key === null) {
+        loadUser();
+      }
+    };
+
+    // Listen for custom auth events
+    const handleAuthChange = () => {
+      loadUser();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('auth-change', handleAuthChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('auth-change', handleAuthChange);
+    };
   }, []);
 
   // Handle user logout
   const handleSignOut = async () => {
     try {
+      // Clear user state immediately for instant UI feedback
+      setUser(null);
+      
+      // Trigger auth change event
+      window.dispatchEvent(new CustomEvent('auth-change'));
+      
       await signOut();
       // signOut redirects, so this won't be reached
     } catch (error) {
       console.error("Sign out error:", error);
+      // Reload user state if sign out failed
+      const currentUser = await getCurrentUser();
+      setUser(currentUser);
     }
   };
   const menuItemsStyle = `transition-colors hover:text-[var(--vivid-orange)] ${

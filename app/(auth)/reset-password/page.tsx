@@ -79,6 +79,11 @@ export default function ResetPasswordPage() {
       if (result.success) {
         toast.success(result.message)
         
+        // Trigger auth state change event if needed
+        if ((result.data as any)?.shouldTriggerAuthChange) {
+          window.dispatchEvent(new CustomEvent('auth-change'))
+        }
+        
         // Redirect to dashboard after successful password reset
         router.push('/dashboard')
         router.refresh()
