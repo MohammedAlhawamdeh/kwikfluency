@@ -461,3 +461,47 @@ export async function sendMagicLink(formData: FormData): Promise<ActionResult> {
     }
   }
 }
+
+/**
+ * Sign in with Google OAuth
+ * Returns the OAuth URL for client-side redirect
+ */
+export async function signInWithGoogle(): Promise<ActionResult> {
+  try {
+    const supabase = await createSupabaseServer()
+
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
+      },
+    })
+
+    if (error) {
+      console.error('Google OAuth error:', error)
+      return {
+        success: false,
+        message: error.message,
+      }
+    }
+
+    if (data.url) {
+      return {
+        success: true,
+        message: 'Redirecting to Google...',
+        data: { redirectUrl: data.url },
+      }
+    } else {
+      return {
+        success: false,
+        message: 'Google authentication failed',
+      }
+    }
+  } catch (error) {
+    console.error('Google sign in error:', error)
+    return {
+      success: false,
+      message: 'An unexpected error occurred. Please try again.',
+    }
+  }
+}

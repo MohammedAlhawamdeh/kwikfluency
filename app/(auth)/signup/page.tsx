@@ -3,8 +3,9 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { signUp, type ActionResult } from '@/app/lib/auth/actions'
+import { signUp, signInWithGoogle, type ActionResult } from '@/app/lib/auth/actions'
 import { toast } from 'sonner'
+import Google from '@/app/components/icons/Google'
 
 /**
  * Signup Page Component
@@ -56,6 +57,29 @@ export default function SignupPage() {
       console.error('Signup error:', error)
       toast.error('An unexpected error occurred. Please try again.')
     } finally {
+      setIsLoading(false)
+    }
+  }
+
+  /**
+   * Handle Google sign-up
+   */
+  async function handleGoogleSignUp() {
+    setIsLoading(true)
+
+    try {
+      const result = await signInWithGoogle()
+      
+      if (result.success && result.data && typeof result.data === 'object' && 'redirectUrl' in result.data) {
+        // Redirect to Google OAuth URL
+        window.location.href = (result.data as { redirectUrl: string }).redirectUrl
+      } else {
+        toast.error(result.message)
+        setIsLoading(false)
+      }
+    } catch (error) {
+      console.error('Google sign up error:', error)
+      toast.error('An unexpected error occurred. Please try again.')
       setIsLoading(false)
     }
   }
@@ -219,6 +243,33 @@ export default function SignupPage() {
           )}
         </button>
       </form>
+
+      {/* Divider */}
+      <div className="auth-divider my-6">
+        <span>or</span>
+      </div>
+
+      {/* Google Sign Up */}
+      <button
+        type="button"
+        onClick={handleGoogleSignUp}
+        disabled={isLoading}
+        className="w-full py-3 px-4 rounded-lg font-medium text-sm flex items-center justify-center gap-3 border transition-colors"
+        style={{
+          backgroundColor: 'var(--background)',
+          borderColor: 'var(--auth-border)',
+          color: 'var(--foreground)',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = 'var(--auth-hover)'
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = 'var(--background)'
+        }}
+      >
+        <Google className="w-5 h-5" />
+        {isLoading ? 'Redirecting...' : 'Continue with Google'}
+      </button>
 
       {/* Sign In Link */}
       <div className="text-center mt-6">

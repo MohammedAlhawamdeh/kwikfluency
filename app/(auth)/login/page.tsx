@@ -3,8 +3,9 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { signIn, sendMagicLink, type ActionResult } from '@/app/lib/auth/actions'
+import { signIn, sendMagicLink, signInWithGoogle, type ActionResult } from '@/app/lib/auth/actions'
 import { toast } from 'sonner'
+import Google from '@/app/components/icons/Google'
 
 /**
  * Login Page Component
@@ -83,6 +84,29 @@ export default function LoginPage() {
       console.error('Magic link error:', error)
       toast.error('An unexpected error occurred. Please try again.')
     } finally {
+      setIsLoading(false)
+    }
+  }
+
+  /**
+   * Handle Google sign-in
+   */
+  async function handleGoogleSignIn() {
+    setIsLoading(true)
+
+    try {
+      const result = await signInWithGoogle()
+      
+      if (result.success && result.data && typeof result.data === 'object' && 'redirectUrl' in result.data) {
+        // Redirect to Google OAuth URL
+        window.location.href = (result.data as { redirectUrl: string }).redirectUrl
+      } else {
+        toast.error(result.message)
+        setIsLoading(false)
+      }
+    } catch (error) {
+      console.error('Google sign in error:', error)
+      toast.error('An unexpected error occurred. Please try again.')
       setIsLoading(false)
     }
   }
@@ -237,6 +261,28 @@ export default function LoginPage() {
         disabled={isLoading}
       >
         {showMagicLink ? 'Sign in with password' : 'Sign in with magic link'}
+      </button>
+
+      {/* Google Sign In */}
+      <button
+        type="button"
+        onClick={handleGoogleSignIn}
+        disabled={isLoading}
+        className="w-full py-3 px-4 rounded-lg font-medium text-sm flex items-center justify-center gap-3 border transition-colors mt-4"
+        style={{
+          backgroundColor: 'var(--background)',
+          borderColor: 'var(--auth-border)',
+          color: 'var(--foreground)',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = 'var(--auth-hover)'
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = 'var(--background)'
+        }}
+      >
+        <Google className="w-5 h-5" />
+        {isLoading ? 'Redirecting...' : 'Continue with Google'}
       </button>
 
       {/* Sign Up Link */}
