@@ -241,6 +241,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 1.5fr;
   gap: 3rem;
+  /* Only align-items: start on desktop */
   align-items: start;
 }
 
@@ -248,6 +249,12 @@ body {
   .checkout-grid {
     grid-template-columns: 1fr;
     gap: 2rem;
+    align-items: initial; /* Remove align-items on mobile */
+  }
+
+  .order-summary {
+    position: static !important; /* Override sticky on mobile */
+    top: unset !important;
   }
 
   .checkout-container {
