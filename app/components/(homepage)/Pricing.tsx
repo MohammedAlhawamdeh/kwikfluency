@@ -1,5 +1,7 @@
+"use client";
 import React from "react";
 import { Check, Star } from "lucide-react";
+import { redirect } from "next/navigation";
 
 const Pricing: React.FC = () => {
   return (
@@ -135,7 +137,10 @@ const Pricing: React.FC = () => {
               </li>
             </ul>
 
-            <button className="btn-primary w-full text-lg py-3 rounded-xl font-semibold">
+            <button
+              onClick={() => redirect("/checkout")}
+              className="btn-primary w-full text-lg py-3 rounded-xl font-semibold"
+            >
               Get Full Plan
             </button>
           </div>
